@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LensCraft | Photography Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #121212;
+            --secondary-dark: #1a1a1a;
+            --accent-gold: #d4af37;
+            --accent-teal: #008080;
+            --text-light: #f5f5f5;
+            --text-muted: #aaaaaa;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant', serif;
+            font-weight: 600;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 4px;
+        }
+
+        /* Hero section animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        /* Menu animation */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        /* Gallery hover effect */
+        .gallery-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            margin: auto;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox img {
+            max-height: 85vh;
+            max-width: 100%;
+        }
+
+        /* Before/After slider */
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .comparison-slider img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .before-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: white;
+            transform: translateX(-50%);
+            cursor: ew-resize;
+        }
+
+        .slider-handle::before {
+            content: "↔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            padding: 5px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+        }
+
+        /* Testimonial carousel */
+        .testimonial-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-item {
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+        }
+
+        .testimonial-item.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        /* Form floating labels */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: transparent;
+            border: 1px solid var(--accent-teal);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        .form-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -0.5rem;
+            left: 0.8rem;
+            font-size: 0.8rem;
+            background-color: var(--primary-dark);
+            padding: 0 0.2rem;
+            color: var(--accent-gold);
+        }
+
+        /* Loading animation */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-dark);
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+            background-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: relative;
+        }
+
+        .watermark::after {
+            content: "LensCraft";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Cormorant', serif;
+            pointer-events: none;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* Observer animations */
+        .observe-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .observe-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="md:hidden fixed top-4 right-4 z-50 bg-black bg-opacity-70 p-3 rounded-full text-accent-gold" id="mobileMenuButton">
+        <i class="fas fa-bars text-2xl"></i>
+    </button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed top-0 left-0 w-full bg-secondary-dark bg-opacity-95 z-40 shadow-lg py-4" id="mobileMenu">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-col items-center space-y-4">
+                <li><a href="#home" class="text-xl hover:text-accent-gold transition-colors">Home</a></li>
+                <li><a href="#portfolio" class="text-xl hover:text-accent-gold transition-colors">Portfolio</a></li>
+                <li><a href="#projects" class="text-xl hover:text-accent-gold transition-colors">Projects</a></li>
+                <li><a href="#about" class="text-xl hover:text-accent-gold transition-colors">About</a></li>
+                <li><a href="#services" class="text-xl hover:text-accent-gold transition-colors">Services</a></li>
+                <li><a href="#testimonials" class="text-xl hover:text-accent-gold transition-colors">Testimonials</a></li>
+                <li><a href="#contact" class="text-xl hover:text-accent-gold transition-colors">Contact</a></li>
+                <li class="mt-4">
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="hidden md:flex fixed top-0 left-0 w-full z-40 bg-secondary-dark bg-opacity-80 backdrop-blur-sm py-4 slide-in">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-accent-gold">LensCraft</a>
+            <ul class="flex space-x-8">
+                <li><a href="#home" class="hover:text-accent-gold transition-colors">Home</a></li>
+                <li><a href="#portfolio" class="hover:text-accent-gold transition-colors">Portfolio</a></li>
+                <li><a href="#projects" class="hover:text-accent-gold transition-colors">Projects</a></li>
+                <li><a href="#about" class="hover:text-accent-gold transition-colors">About</a></li>
+                <li><a href="#services" class="hover:text-accent-gold transition-colors">Services</a></li>
+                <li><a href="#testimonials" class="hover:text-accent-gold transition-colors">Testimonials</a></li>
+                <li><a href="#contact" class="hover:text-accent-gold transition-colors">Contact</a></li>
+            </ul>
+            <div class="flex space-x-4 text-xl">
+                <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <!-- Background image with lazy loading -->
+        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+             alt="Photography background" 
+             class="absolute inset-0 w-full h-full object-cover" 
+             loading="lazy">
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h1 class="text-6xl font-bold mb-6 fade-in-up" style="animation-delay: 0.3s;">Capture Life's Moments</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto fade-in-up" style="animation-delay: 0.6s;">Professional photography that tells your unique story through stunning visual narratives.</p>
+            <div class="fade-in-up" style="animation-delay: 0.9s;">
+                <a href="#portfolio" class="inline-block px-8 py-3 bg-accent-gold text-primary-dark font-semibold rounded hover:bg-opacity-90 transition-all">View Portfolio</a>
+            </div>
+        </div>
+        <a href="#portfolio" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-3xl text-white animate-bounce">
+            <i class="fas fa-angle-down"></i>
+        </a>
+    </section>
+
+    <!-- Portfolio Gallery Section -->
+    <section id="portfolio" class="py-20 bg-secondary-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4 observe-hidden">Portfolio Gallery</h2>
+            <p class="text-center text-text-muted mb-12 max-w-2xl mx-auto observe-hidden" style="transition-delay: 0.2s;">Explore my diverse collection of photographic work across different genres and styles.</p>
+            
+            <!-- Gallery Filter -->
+            <div class="flex flex-wrap justify-center mb-12 gap-2 observe-hidden" style="transition-delay: 0.4s;">
+                <button class="filter-btn px-4 py-2 bg-accent-gold text-primary-dark rounded-full font-medium" data-filter="all">All</button>
+                <button class="filter-btn px-4 py-2 border border-accent-teal rounded-full hover:bg-accent-teal hover:text-primary-dark transition-colors" data-filter="portraits">Portraits</button>
+                <button class="filter-btn px-4 py-2 border border-accent-teal rounded-full hover:bg-accent-teal hover:text-primary-dark transition-colors" data-filter="landscapes">Landscapes</button>
+                <button class="filter-btn px-4 py-2 border border-accent-teal rounded-full hover:bg-accent-teal hover:text-primary-dark transition-colors" data-filter="events">Events</button>
+                <button class="filter-btn px-4 py-2 border border-accent-teal rounded-full hover:bg-accent-teal hover:text-primary-dark transition-colors" data-filter="street">Street</button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Each gallery item with data-category for filtering -->
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="portraits">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+                         alt="Portrait photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="landscapes">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                         alt="Landscape photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="events">
+                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                         alt="Event photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="street">
+                    <img src="https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                         alt="Street photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="portraits">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+                         alt="Portrait photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item observe-hidden rounded-lg overflow-hidden relative" data-category="landscapes">
+                    <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                         alt="Landscape photography" 
+                         class="w-full h-full object-cover cursor-pointer"
+                         loading="lazy">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <button class="bg-accent-gold text-primary-dark px-6 py-2 rounded-full font-medium view-btn">View</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 observe-hidden" style="transition-delay: 0.6s;">
+                <a href="#" class="inline-block px-6 py-3 border border-accent-teal rounded-full hover:bg-accent-teal transition-colors">View More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Showcases Section -->
+    <section id="projects" class="py-20 bg-primary-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4 observe-hidden">Project Showcases</h2>
+            <p class="text-center text-text-muted mb-12 max-w-2xl mx-auto observe-hidden" style="transition-delay: 0.2s;">Featured projects with behind-the-scenes insights into my creative process.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Project 1 -->
+                <div class="observe-hidden">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-gold">Urban Portraits Series</h3>
+                    <p class="mb-4">A stunning collection of street portraits capturing the raw energy and diversity of city life. Shot over three months in various urban environments.</p>
+                    <p class="mb-6 text-text-muted">Featured in: City Living Magazine, December 2022</p>
+                    
+                    <!-- Before/After Slider -->
+                    <div class="comparison-slider relative rounded-lg overflow-hidden shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1493612276216-3f4e82214067?ixlib=rb-1.2.1&auto=format&fit=crop&w=1800&q=80" 
+                             alt="After editing" 
+                             class="w-full" 
+                             loading="lazy">
+                        <div class="before-image">
+                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1800&q=80" 
+                                 alt="Before editing" 
+                                 class="w-full" 
+                                 loading="lazy">
+                        </div>
+                        <div class="slider-handle"></div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="observe-hidden" style="transition-delay: 0.3s;">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-gold">Alpine Wilderness</h3>
+                    <p class="mb-4">A breathtaking journey through mountain landscapes, capturing the beauty and solitude of high-altitude wilderness. This series required extensive planning and challenging hikes.</p>
+                    <p class="mb-6 text-text-muted">Featured in: National Geographic Travel, March 2023</p>
+                    
+                    <!-- Before/After Slider -->
+                    <div class="comparison-slider relative rounded-lg overflow-hidden shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1800&q=80" 
+                             alt="After editing" 
+                             class="w-full" 
+                             loading="lazy">
+                        <div class="before-image">
+                            <img src="https://images.unsplash.com/photo-1472491235688-bdc81a63246e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1800&q=80" 
+                                 alt="Before editing" 
+                                 class="w-full" 
+                                 loading="lazy">
+                        </div>
+                        <div class="slider-handle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-20 bg-secondary-dark">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/3 observe-hidden">
+                    <div class="relative rounded-lg overflow-hidden shadow-xl filter grayscale hover:grayscale-0 transition-all duration-700">
+                        <img src="https://images.unsplash.com/photo-1560259937-5d9f446a6d1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+                             alt="Photographer portrait" 
+                             class="w-full h-auto" 
+                             loading="lazy">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+                            <h3 class="text-2xl font-bold">Jane Doe</h3>
+                            <p class="text-accent-gold">Professional Photographer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-2/3 observe-hidden" style="transition-delay: 0.3s;">
+                    <h2 class="text-4xl font-bold mb-6">About Me</h2>
+                    <p class="mb-4">With over a decade of experience in professional photography, I've developed a distinctive style that blends technical precision with artistic vision. My journey began with a simple point-and-shoot camera and evolved into a lifelong passion for capturing authentic moments.</p>
+                    <p class="mb-6">I specialize in portrait, event, and landscape photography, with a particular focus on storytelling through imagery. My work has been featured in numerous publications and exhibitions worldwide.</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-primary-dark p-4 rounded-lg text-center">
+                            <div class="text-3xl mb-2 text-accent-teal">12+</div>
+                            <div>Years Experience</div>
+                        </div>
+                        <div class="bg-primary-dark p-4 rounded-lg text-center">
+                            <div class="text-3xl mb-2 text-accent-teal">500+</div>
+                            <div>Projects Completed</div>
+                        </div>
+                        <div class="bg-primary-dark p-4 rounded-lg text-center">
+                            <div class="text-3xl mb-2 text-accent-teal">120+</div>
+                            <div>Satisfied Clients</div>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="inline-block px-6 py-3 bg-accent-gold text-primary-dark rounded hover:bg-opacity-90 transition-all font-medium">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-primary-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4 observe-hidden">My Services</h2>
+            <p class="text-center text-text-muted mb-12 max-w-2xl mx-auto observe-hidden" style="transition-delay: 0.2s;">Comprehensive photography services tailored to meet your specific needs and vision.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-secondary-dark rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 observe-hidden">
+                    <div class="text-4xl mb-4 text-accent-gold">
+                        <i class="fas fa-portrait"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Portrait Photography</h3>
+                    <p class="mb-4">Professional portraits that capture personality and emotion in stunning studio or natural light settings.</p>
+                    <ul class="mb-6 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Studio or location shoots</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Professional lighting</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Fully retouched images</li>
+                    </ul>
+                    <div class="text-xl font-bold mb-2">Starting at $399</div>
+                    <a href="#contact" class="inline-block px-6 py-2 border border-accent-teal rounded-full hover:bg-accent-teal transition-colors">Book Now</a>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="bg-secondary-dark rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 observe-hidden" style="transition-delay: 0.2s;">
+                    <div class="text-4xl mb-4 text-accent-gold">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Event Photography</h3>
+                    <p class="mb-4">Professional coverage of weddings, corporate events, and special occasions to preserve your precious moments.</p>
+                    <ul class="mb-6 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Full event coverage</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> High-resolution images</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Fast turnaround time</li>
+                    </ul>
+                    <div class="text-xl font-bold mb-2">Starting at $999</div>
+                    <a href="#contact" class="inline-block px-6 py-2 border border-accent-teal rounded-full hover:bg-accent-teal transition-colors">Book Now</a>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="bg-secondary-dark rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 observe-hidden" style="transition-delay: 0.4s;">
+                    <div class="text-4xl mb-4 text-accent-gold">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Landscape Photography</h3>
+                    <p class="mb-4">Breathtaking landscape images that capture the beauty of natural environments in perfect lighting conditions.</p>
+                    <ul class="mb-6 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Custom location scouting</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Golden hour photography</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent-teal mr-2"></i> Professional editing</li>
+                    </ul>
+                    <div class="text-xl font-bold mb-2">Starting at $599</div>
+                    <a href="#contact" class="inline-block px-6 py-2 border border-accent-teal rounded-full hover:bg-accent-teal transition-colors">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-secondary-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4 observe-hidden">Client Testimonials</h2>
+            <p class="text-center text-text-muted mb-12 max-w-2xl mx-auto observe-hidden" style="transition-delay: 0.2s;">Hear what my clients have to say about their experience.</p>
+            
+            <div class="testimonial-carousel relative max-w-4xl mx-auto observe-hidden" style="transition-delay: 0.4s;">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-item active">
+                    <div class="bg-primary-dark rounded-lg p-8 relative">
+                        <div class="absolute -top-4 -left-4 text-5xl text-accent-gold opacity-20">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-lg mb-6">"Jane's portraits captured my personality in a way I didn't think was possible. The lighting, composition, and direction were all perfect. I'll be coming back for all my professional headshots!"</p>
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+                                 alt="Client portrait" 
+                                 class="w-12 h-12 rounded-full mr-4" 
+                                 loading="lazy">
+                            <div>
+                                <h4 class="font-bold">Sarah Johnson</h4>
+                                <p class="text-sm text-text-muted">Marketing Director, TechVision</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-item">
+                    <div class="bg-primary-dark rounded-lg p-8 relative">
+                        <div class="absolute -top-4 -left-4 text-5xl text-accent-gold opacity-20">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-lg mb-6">"The landscape photos Jane took for our travel company are absolutely stunning. She has an incredible eye for composition and light. The images have significantly increased engagement on our website and social media."</p>
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+                                 alt="Client portrait" 
+                                 class="w-12 h-12 rounded-full mr-4" 
+                                 loading="lazy">
+                            <div>
+                                <h4 class="font-bold">Michael Chen</h4>
+                                <p class="text-sm text-text-muted">CEO, AdventureBound</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-item">
+                    <div class="bg-primary-dark rounded-lg p-8 relative">
+                        <div class="absolute -top-4 -left-4 text-5xl text-accent-gold opacity-20">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-lg mb-6">"Working with Jane on our wedding photography was the best decision we made. She captured every important moment beautifully while being completely unobtrusive. The photos are memories we'll treasure forever."</p>
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" 
+                                 alt="Client portrait" 
+                                 class="w-12 h-12 rounded-full mr-4" 
+                                 loading="lazy">
+                            <div>
+                                <h4 class="font-bold">Emily & James Wilson</h4>
+                                <p class="text-sm text-text-muted">Happy Newlyweds</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-accent-gold text-primary-dark p-2 rounded-full opacity-80 hover:opacity-100 transition-opacity prev-btn">
+                    <i class="fas fa-chevron-left text-xl"></i>
+                </button>
+                <button class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-accent-gold text-primary-dark p-2 rounded-full opacity-80 hover:opacity-100 transition-opacity next-btn">
+                    <i class="fas fa-chevron-right text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-primary-dark relative">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2 observe-hidden">
+                    <h2 class="text-4xl font-bold mb-6">Get in Touch</h2>
+                    <p class="mb-6">Ready to discuss your next photography project? Fill out the form or contact me directly to schedule a consultation.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="text-xl mr-4 text-accent-gold">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Email</h3>
+                                <a href="mailto:info@lenscraft.com" class="hover:text-accent-teal transition-colors">info@lenscraft.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-xl mr-4 text-accent-gold">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Phone</h3>
+                                <a href="tel:+11234567890" class="hover:text-accent-teal transition-colors">(123) 456-7890</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-xl mr-4 text-accent-gold">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Studio</h3>
+                                <p>1234 Photography St, Creative District<br>New York, NY 10001</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold mb-4">Follow Me</h3>
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="hover:text-accent-gold transition-colors"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 observe-hidden" style="transition-delay: 0.3s;">
+                    <form id="contactForm" class="bg-secondary-dark p-8 rounded-lg shadow-xl">
+                        <div class="form-group mb-6">
+                            <input type="text" id="name" class="form-input rounded" placeholder=" " required>
+                            <label for="name" class="form-label">Your Name</label>
+                        </div>
+                        
+                        <div class="form-group mb-6">
+                            <input type="email" id="email" class="form-input rounded" placeholder=" " required>
+                            <label for="email" class="form-label">Email Address</label>
+                        </div>
+                        
+                        <div class="form-group mb-6">
+                            <input type="text" id="subject" class="form-input rounded" placeholder=" ">
+                            <label for="subject" class="form-label">Subject (Optional)</label>
+                        </div>
+                        
+                        <div class="form-group mb-6">
+                            <textarea id="message" class="form-input rounded resize-none h-32" placeholder=" " required></textarea>
+                            <label for="message" class="form-label">Your Message</label>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-3 bg-accent-gold text-primary-dark rounded font-bold hover:bg-opacity-90 transition-all">
+                            Send Message
+                        </button>
+                    </form>
+                    
+                    <div id="formSuccess" class="hidden mt-4 p-4 bg-green-900 text-white rounded-lg">
+                        <i class="fas fa-check-circle mr-2"></i> Your message has been sent successfully! I'll get back to you soon.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="text-2xl font-bold text-accent-gold">LensCraft</a>
+                    <p class="text-sm text-text-muted mt-2">Capturing moments, creating memories.</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4 md:gap-8">
+                    <a href="#home" class="hover:text-accent-gold transition-colors">Home</a>
+                    <a href="#portfolio" class="hover:text-accent-gold transition-colors">Portfolio</a>
+                    <a href="#about" class="hover:text-accent-gold transition-colors">About</a>
+                    <a href="#services" class="hover:text-accent-gold transition-colors">Services</a>
+                    <a href="#contact" class="hover:text-accent-gold transition-colors">Contact</a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-text-muted text-sm">
+                <p>&copy; 2023 LensCraft Photography. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="absolute top-4 right-4 text-white text-3xl close-btn">&times;</button>
+            <img id="lightboxImage" src="" alt="Full size image">
+            <div class="text-center mt-2 text-white" id="imageInfo"></div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="fixed bottom-6 right-6 bg-accent-gold text-primary-dark p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-opacity-90" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading
+            setTimeout(function() {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1500);
+            
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+                // Change icon based on menu state
+                const icon = mobileMenuButton.querySelector('i');
+                if (mobileMenu.classList.contains('open')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('#mobileMenu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    mobileMenuButton.querySelector('i').classList.remove('fa-times');
+                    mobileMenuButton.querySelector('i').classList.add('fa-bars');
+                });
+            });
+            
+            // Gallery filtering
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Reset active button state
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-accent-gold', 'text-primary-dark');
+                        btn.classList.add('border', 'border-accent-teal');
+                    });
+                    
+                    // Set clicked button as active
+                    this.classList.remove('border', 'border-accent-teal');
+                    this.classList.add('bg-accent-gold', 'text-primary-dark');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    galleryItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Lightbox functionality
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const imageInfo = document.getElementById('imageInfo');
+            const closeButtons = document.querySelectorAll('.close-btn, .lightbox');
+            
+            document.querySelectorAll('.gallery-item img, .view-btn').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const imgSrc = this.tagName === 'IMG' ? this.src : this.parentElement.previousElementSibling.src;
+                    const imgAlt = this.tagName === 'IMG' ? this.alt : this.parentElement.previousElementSibling.alt;
+                    
+                    lightboxImage.src = imgSrc;
+                    lightboxImage.alt = imgAlt;
+                    imageInfo.textContent = imgAlt;
+                    
+                    lightbox.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    lightbox.classList.remove('show');
+                    document.body.style.overflow = '';
+                });
+            });
+            
+            // Before/After slider
+            const comparisonSliders = document.querySelectorAll('.comparison-slider');
+            
+            comparisonSliders.forEach(slider => {
+                const beforeImage = slider.querySelector('.before-image img');
+                const handle = slider.querySelector('.slider-handle');
+                
+                // Set initial width (50%)
+                beforeImage.style.width = '50%';
+                
+                let isDragging = false;
+                
+                handle.addEventListener('mousedown', function(e) {
+                    isDragging = true;
+                    e.preventDefault(); // Prevent text selection
+                });
+                
+                document.addEventListener('mousemove', function(e) {
+                    if (!isDragging) return;
+                    
+                    const sliderRect = slider.getBoundingClientRect();
+                    let position = e.clientX - sliderRect.left;
+                    
+                    // Constrain to slider boundaries
+                    position = Math.max(0, position);
+                    position = Math.min(position, sliderRect.width);
+                    
+                    const percentage = (position / sliderRect.width) * 100;
+                    
+                    beforeImage.style.width = `${percentage}%`;
+                    handle.style.left = `${percentage}%`;
+                });
+                
+                document.addEventListener('mouseup', function() {
+                    isDragging = false;
+                });
+                
+                // Touch support
+                handle.addEventListener('touchstart', function(e) {
+                    isDragging = true;
+                    e.preventDefault();
+                });
+                
+                document.addEventListener('touchmove', function(e) {
+                    if (!isDragging) return;
+                    
+                    const sliderRect = slider.getBoundingClientRect();
+                    let position = e.touches[0].clientX - sliderRect.left;
+                    
+                    // Constrain to slider boundaries
+                    position = Math.max(0, position);
+                    position = Math.min(position, sliderRect.width);
+                    
+                    const percentage = (position / sliderRect.width) * 100;
+                    
+                    beforeImage.style.width = `${percentage}%`;
+                    handle.style.left = `${percentage}%`;
+                });
+                
+                document.addEventListener('touchend', function() {
+                    isDragging = false;
+                });
+            });
+            
+            // Testimonial carousel
+            const testimonials = document.querySelectorAll('.testimonial-item');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            let currentTestimonial = 0;
+            
+            function showTestimonial(index) {
+                testimonials.forEach((testimonial, i) => {
+                    if (i === index) {
+                        testimonial.classList.add('active');
+                    } else {
+                        testimonial.classList.remove('active');
+                    }
+                });
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            });
+            
+            // Auto-rotate testimonials
+            setInterval(function() {
+                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            }, 8000);
+            
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            const formSuccess = document.getElementById('formSuccess');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Here you would normally send the form data to a server
+                // For this demo, we'll just show the success message
+                
+                // Reset form
+                this.reset();
+                
+                // Show success message
+                formSuccess.classList.remove('hidden');
+                
+                // Hide success message after 5 seconds
+                setTimeout(function() {
+                    formSuccess.classList.add('hidden');
+                }, 5000);
+            });
+            
+            // Back to top button
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('observe-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.observe-hidden').forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

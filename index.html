@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futurist Web Design | Custom Websites for Modern Brands</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="I build modern, fast, and mobile-friendly websites to help small businesses in India grow online. All for a simple, one-time fee of ₹3999.">
+    <meta name="keywords" content="web design Kochi, website developer Kerala, affordable websites India, ₹3999 website design, small business website, freelance web developer India, low cost website Kochi, mobile responsive design, custom website development, get a website for business, web design services Kerala, HTML, CSS, JavaScript, Tailwind CSS">
+    <meta name="author" content="[Muhammed Thariq Anwar ]">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path fill=%22%2300f2ea%22 d=%22M10 10 H90 V25 H57.5 V90 H42.5 V25 H10 z%22/></svg>">
+    <link rel="apple-touch-icon" href="https://placehold.co/180x180/010103/00f2ea?text=T">
+
+    <!-- Open Graph Meta Tags (for social sharing on Facebook, LinkedIn etc.) -->
+    <meta property="og:title" content="Futurist Web Design | Custom Websites for Modern Brands">
+    <meta property="og:description" content="Affordable, modern, and mobile-friendly websites for small businesses, starting at just ₹3999.">
+    <meta property="og:image" content="https://placehold.co/1200x630/010103/00f2ea?text=Futurist+Web+Design">
+    <meta property="og:url" content="[Your Website URL]">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags (for sharing on Twitter) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Futurist Web Design | Custom Websites for Modern Brands">
+    <meta name="twitter:description" content="Affordable, modern, and mobile-friendly websites for small businesses, starting at just ₹3999.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/010103/00f2ea?text=Futurist+Web+Design">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#00f2ea', // Cyan
+                        secondary: '#d600ff', // Magenta
+                        'base-100': '#010103', // Near Black
+                        'surface': '#111319', // Dark surface for cards
+                        'text-light': '#E0E0E0',
+                        'text-dark': '#FFFFFF',
+                    },
+                    boxShadow: {
+                        'primary-glow': '0 0 15px rgba(0, 242, 234, 0.3), 0 0 5px rgba(0, 242, 234, 0.2)',
+                        'secondary-glow': '0 0 15px rgba(214, 0, 255, 0.3), 0 0 5px rgba(214, 0, 255, 0.2)',
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 3s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%, 100%': { boxShadow: '0 0 25px rgba(0, 242, 234, 0.4)' },
+                            '50%': { boxShadow: '0 0 45px rgba(0, 242, 234, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS for Animations and Specific Styles -->
+    <style>
+        body {
+            background-color: #010103;
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .text-glow {
+            text-shadow: 0 0 8px rgba(0, 242, 234, 0.5);
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .portfolio-card .portfolio-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .portfolio-card:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        .pricing-popular-animated {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        
+        
+
+        /* New: Holographic grid revealed by the rotating light */
+        .animated-contact-form::after {
+            content: '';
+            position: absolute;
+            inset: 2px; /* Sit just inside the parent border */
+            border-radius: 0.75rem; /* Match parent's rounded-xl */
+            
+            /* The pattern to be revealed */
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0, 242, 234, 0.1) 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0, 242, 234, 0.1) 20px);
+            background-size: 20px 20px;
+
+            /* The MASK that reveals the pattern */
+            mask: conic-gradient(from 180deg, transparent 0%, black 5%, black 100%);
+            
+            /* Apply rotation to the pseudo-element to spin the mask */
+            animation: rotate-border 4s linear infinite;
+        }
+
+
+        @keyframes rotate-border {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-text-light font-sans antialiased">
+
+    <!-- =========== Header & Navigation =========== -->
+    <header class="fixed w-full bg-base-100/80 backdrop-blur-md z-50 transition-all duration-300 border-b border-white/10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-text-light flex items-center hover:text-secondary transition">
+  <i class="fa-solid fa-house text-lg"></i>
+</a>
+
+
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#services" class="text-text-light hover:text-primary transition-colors duration-300">Services</a>
+                <a href="#about" class="text-text-light hover:text-primary transition-colors duration-300">About</a>
+                <a href="#portfolio" class="text-text-light hover:text-primary transition-colors duration-300">Work</a>
+                <a href="#pricing" class="text-text-light hover:text-primary transition-colors duration-300">Pricing</a>
+            </nav>
+            <a href="#contact" class="hidden md:inline-block bg-primary text-base-100 font-bold py-2 px-5 rounded-md hover:shadow-primary-glow transition-all duration-300">
+                Get a Quote
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-text-dark focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-base-100 border-t border-white/10">
+            <nav class="flex flex-col items-center py-4 space-y-4">
+                <a href="#services" class="text-text-light hover:text-primary transition-colors duration-300">Services</a>
+                <a href="#about" class="text-text-light hover:text-primary transition-colors duration-300">About</a>
+                <a href="#portfolio" class="text-text-light hover:text-primary transition-colors duration-300">Work</a>
+                <a href="#pricing" class="text-text-light hover:text-primary transition-colors duration-300">Pricing</a>
+                <a href="#contact" class="bg-primary text-base-100 font-bold py-2 px-5 rounded-md hover:shadow-primary-glow transition-all duration-300">Get a Quote</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section =========== -->
+       <section id="hero-section" class="relative min-h-screen flex items-center justify-center overflow-hidden p-4 pt-20">
+    
+    <div class="absolute top-0 left-0 w-full h-full bg-base-100/60 z-0"></div> <video 
+        class="absolute top-0 left-0 w-full h-full object-cover -z-10" 
+        autoplay 
+        loop 
+        muted 
+        playsinline
+    >
+        <source src="components/heroic.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div class="container mx-auto px-4 z-10 text-center">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-text-dark mb-6 leading-tight fade-in-up">
+            <span class="text-primary text-glow">Future-Ready Websites</span> <br> for Your Business
+        </h1>
+        <p class="text-lg md:text-xl text-text-light mb-8 max-w-3xl mx-auto fade-in-up delay-100">
+            I build immersive, high-performance digital experiences that captivate and convert.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 fade-in-up delay-200">
+            <a href="#portfolio" class="w-full sm:w-auto bg-primary text-base-100 font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:-translate-y-1 hover:shadow-primary-glow">
+                View My Work
+            </a>
+            <a href="#pricing" class="w-full sm:w-auto border-2 border-primary text-primary font-bold py-3 px-8 rounded-md transition-all duration-300 hover:bg-primary hover:text-base-100">
+                See Pricing
+            </a>
+        </div>
+    </div>
+</section>
+
+        <!-- =========== Services Section =========== -->
+        <section id="services" class="relative py-20 md:py-28 overflow-hidden">
+            <div class="relative z-10 container mx-auto px-6">
+                <div class="text-center mb-16 animate-on-scroll">
+                    <h2 class="text-3xl md:text-4xl font-bold text-text-dark mb-4">Core Technologies & Services</h2>
+                    <p class="text-text-light max-w-2xl mx-auto">One simple package, packed with all the essential features for your business.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-surface p-8 rounded-xl border border-white/10 transition-all duration-300 hover:border-primary/50 hover:shadow-primary-glow transform hover:-translate-y-2 animate-on-scroll">
+                        <div class="text-primary mb-4"><svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m8-8h2M4 12H2m15.364 6.364l1.414 1.414M4.222 4.222l1.414 1.414m12.728 0l-1.414 1.414M5.636 18.364l-1.414 1.414M12 16a4 4 0 110-8 4 4 0 010 8z"></path></svg></div>
+                        <h3 class="text-xl font-bold text-text-dark mb-2">Custom Modern Design</h3>
+                        <p class="text-text-light">A unique website tailored to your brand, designed to impress your customers and stand out from the competition.</p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="bg-surface p-8 rounded-xl border border-white/10 transition-all duration-300 hover:border-primary/50 hover:shadow-primary-glow transform hover:-translate-y-2 animate-on-scroll" style="transition-delay: 150ms;">
+                        <div class="text-primary mb-4"><svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                        <h3 class="text-xl font-bold text-text-dark mb-2">Fast & Reliable Hosting</h3>
+                        <p class="text-text-light">Your package includes 1 year of free, secure, and high-speed hosting via GitHub Pages. (Custom domain setup is included, but domain purchase is separate).</p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="bg-surface p-8 rounded-xl border border-white/10 transition-all duration-300 hover:border-primary/50 hover:shadow-primary-glow transform hover:-translate-y-2 animate-on-scroll" style="transition-delay: 300ms;">
+                        <div class="text-primary mb-4"><svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div>
+                        <h3 class="text-xl font-bold text-text-dark mb-2">Fully Mobile Responsive</h3>
+                        <p class="text-text-light">Your site will look and function perfectly on all devices—desktops, tablets, and smartphones.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== About Me Section =========== -->
+<section id="about" class="py-20 md:py-28">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+            <div class="relative animate-on-scroll">
+                <div class="absolute inset-0 bg-primary/10 rounded-2xl transform rotate-3 -translate-x-4"></div>
+                <!-- Video container -->
+                <div class="relative rounded-2xl w-full h-auto shadow-2xl border-4 border-surface overflow-hidden" style="padding-top: 100%;"> <!-- 1:1 aspect ratio -->
+                    <video 
+                        class="absolute top-0 left-0 w-full h-full object-cover" 
+                        autoplay 
+                        loop 
+                        muted 
+                        playsinline
+                        aria-label="A video showing the web developer at work"
+                    >
+                        <!-- Replace with your actual video file -->
+                        <source src="components/Make_thee_face_202509011559.mp4" type="video/mp4"
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div class="animate-on-scroll" style="transition-delay: 150ms;">
+                <h2 class="text-3xl md:text-4xl font-bold text-text-dark mb-4">About Me</h2>
+  <p class="text-text-light mb-8 leading-relaxed">
+    Hi, I'm <span class="text-primary font-medium">Thareek</span>, a passionate <span class="text-primary font-medium">freelance web developer based in Kochi, Kerala</span>. With a background in <span class="text-primary font-medium">BSc Physics from Kerala University</span>, I bring strong analytical and problem-solving skills into web development. 
+    <br><br>
+    I specialize in creating <span class="text-primary font-medium">responsive, SEO-friendly websites</span> that help small businesses, startups, and entrepreneurs grow their online presence. From <span class="text-primary font-medium">business websites</span> to <span class="text-primary font-medium">e-commerce stores and portfolio sites</span>, my focus is on <span class="text-primary font-medium">modern design, mobile optimization, and digital branding</span>. 
+    <br><br>
+    My goal is to provide <span class="text-primary font-medium">affordable web development services in Kerala</span> that not only look great but also deliver high performance and real results. I’m truly passionate about building websites that become the heart of a brand’s online identity.
+</p>
+
+<div class="flex flex-wrap gap-3 justify-center">
+  <span class="flex items-center gap-2 bg-gradient-to-r from-orange-500/10 to-orange-500/5 border border-orange-500/30 rounded-full py-2 px-4 text-sm font-medium text-orange-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-brands fa-html5 text-lg"></i> HTML
+  </span>
+  
+  <span class="flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-blue-500/5 border border-blue-500/30 rounded-full py-2 px-4 text-sm font-medium text-blue-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-brands fa-css3-alt text-lg"></i> CSS
+  </span>
+  
+  <span class="flex items-center gap-2 bg-gradient-to-r from-yellow-500/10 to-yellow-500/5 border border-yellow-500/30 rounded-full py-2 px-4 text-sm font-medium text-yellow-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-brands fa-square-js text-lg"></i> JavaScript
+  </span>
+  
+  <span class="flex items-center gap-2 bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 border border-cyan-500/30 rounded-full py-2 px-4 text-sm font-medium text-cyan-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-solid fa-wind text-lg"></i> Tailwind CSS
+  </span>
+  
+  <span class="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-purple-500/5 border border-purple-500/30 rounded-full py-2 px-4 text-sm font-medium text-purple-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-brands fa-bootstrap text-lg"></i> Bootstrap
+  </span>
+  
+  <span class="flex items-center gap-2 bg-gradient-to-r from-red-500/10 to-red-500/5 border border-red-500/30 rounded-full py-2 px-4 text-sm font-medium text-red-500 shadow-sm hover:shadow-md hover:scale-105 transition">
+    <i class="fa-brands fa-git-alt text-lg"></i> Git
+  </span>
+</div>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- =========== Portfolio Section =========== -->
+       <section id="portfolio" class="py-20 md:py-28 bg-surface">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16 animate-on-scroll">
+      <h2 class="text-3xl md:text-4xl font-bold text-text-dark mb-4">My Recent Work</h2>
+      <p class="text-text-light max-w-2xl mx-auto">Here are a few examples of websites I've created for my clients.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <script>
+        const projects = [
+          { title: 'Cafe Website', desc: 'Modern site for a local coffee shop.', tags: ['HTML', 'Tailwind', 'JS'], img: 'components/cafe.png', link: 'cafe.html' },
+          { title: 'Salon & Spa', desc: 'Elegant site for a beauty salon with bookings.', tags: ['HTML', 'CSS', 'JS'], img: 'components/spa.png', link: 'salon.html' },
+          { title: 'Fitness Center', desc: 'Dynamic gym website with class schedules.', tags: ['HTML', 'CSS', 'JS'], img: 'components/gym.png', link: 'gym.html' },
+          { title: 'Restaurant', desc: 'Appetizing site for a fine dining restaurant.', tags: ['HTML', 'CSS', 'JS'], img: 'components/resturant.png', link: 'resturant.html' },
+          { title: 'Photographer', desc: 'Portfolio for a professional photographer.', tags: ['HTML', 'Tailwind', 'JS'], img: 'components/photographer.png', link: 'photography.html' },
+          { title: 'e-commerce', desc: 'E-commerce store.', tags: ['HTML', 'Tailwind', 'JS'], img: 'components/e-commerece.png', link: 'e-commerce.html' },
+        ];
+
+        projects.forEach((project, index) => {
+          document.write(`
+            <div class="portfolio-card group relative rounded-xl overflow-hidden border border-white/10 animate-on-scroll" style="transition-delay: ${index * 100}ms;">
+              <img src="${project.img}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+              <div class="portfolio-overlay absolute inset-0 bg-base-100/80 backdrop-blur-sm flex flex-col justify-end p-6">
+                <div class="transform transition-transform duration-300 group-hover:translate-y-0 translate-y-8">
+                  <h3 class="text-xl text-text-dark font-bold mb-2">${project.title}</h3>
+                  <p class="text-text-light mb-4 text-sm">${project.desc}</p>
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    ${project.tags.map(tag => `<span class="bg-primary/20 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">${tag}</span>`).join('')}
+                  </div>
+                  <a href="${project.link}" target="_blank" rel="noopener noreferrer" class="text-secondary font-semibold hover:underline">View Project →</a>
+                </div>
+              </div>
+            </div>
+          `);
+        });
+      </script>
+    </div>
+  </div>
+</section>
+
+
+        <!-- =========== Pricing Section =========== -->
+        <section id="pricing" class="py-20 md:py-28">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 animate-on-scroll">
+                    <h2 class="text-3xl md:text-4xl font-bold text-text-dark mb-4">Simple, Transparent Pricing</h2>
+                    <p class="text-text-light max-w-2xl mx-auto">Choose the perfect plan for your business. No hidden fees, no monthly costs.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    
+                    <!-- Pricing Card 1: Starter -->
+                    <div class="bg-surface p-8 rounded-2xl border border-white/10 transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold mb-4 text-text-dark">Starter</h3>
+                            <div class="text-5xl font-extrabold text-text-dark mb-2">₹1999</div>
+                            <p class="text-text-light mb-8">One-Time Payment</p>
+                            
+                            <ul class="space-y-4 mb-8 text-left text-text-light text-sm">
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Up to 6 Pages</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>1 Year Free Hosting (GitHub Pages)</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Mobile Responsive</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Contact Form</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>1 Round of Revisions</span></li>
+                            </ul>
+                            
+                            <a href="#contact" class="w-full inline-block bg-primary/20 text-primary font-bold py-3 px-8 rounded-md transition-all duration-300 hover:bg-primary hover:text-base-100">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Card 2: Growth (Most Popular) -->
+                    <div class="relative bg-surface p-8 rounded-2xl border-2 border-primary transition-all duration-300 transform lg:scale-105 animate-on-scroll pricing-popular-animated" style="transition-delay: 150ms;">
+                        <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                            <span class="bg-primary text-base-100 text-xs font-bold uppercase tracking-wider px-4 py-1 rounded-full">Most Popular</span>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold mb-4 text-primary">Growth</h3>
+                            <div class="text-6xl font-extrabold text-primary mb-2">₹3999</div>
+                            <p class="text-text-light mb-8">One-Time Payment</p>
+                            
+                            <ul id="growth-features" class="space-y-4 mb-8 text-left text-text-light">
+                                <!-- Features will be injected here by JS -->
+                            </ul>
+                            
+                            <a href="#contact" class="w-full inline-block bg-primary text-base-100 font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-primary-glow">
+                                Start Your Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Card 3: Business -->
+                    <div class="bg-surface p-8 rounded-2xl border border-white/10 transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll" style="transition-delay: 300ms;">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold mb-4 text-text-dark">Business</h3>
+                            <div class="text-5xl font-extrabold text-text-dark mb-2">₹7999</div>
+                            <p class="text-text-light mb-8">One-Time Payment</p>
+                            
+                             <ul class="space-y-4 mb-8 text-left text-text-light text-sm">
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Custom 12-16 Page Website</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Everything in Growth Plan</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>E-commerce Integration</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Analytics Setup</span></li>
+                                <li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>Priority Support</span></li>
+                            </ul>
+                            
+                            <a href="#contact" class="w-full inline-block bg-primary/20 text-primary font-bold py-3 px-8 rounded-md transition-all duration-300 hover:bg-primary hover:text-base-100">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== Contact Section =========== -->
+     <section id="contact" class="relative py-20 md:py-28 overflow-hidden">
+    
+    <canvas id="particle-canvas-contact" class="particle-canvas absolute top-0 left-0 w-full h-full"></canvas>
+
+    <div class="relative z-10 container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-dark mb-4">Ready to Build the Future?</h2>
+            <p class="text-text-light max-w-2xl mx-auto">Let's connect. Fill out the form below or email me, and I'll get back to you within 24 hours.</p>
+        </div>
+        
+       <div class="max-w-lg mx-auto bg-surface p-8 rounded-xl border border-white/10 shadow-lg animate-on-scroll overflow-hidden">
+                <div class="mb-5">
+                    <label for="name" class="block text-sm font-medium mb-2 text-text-dark">Your Name</label>
+                    <input type="text" id="name" name="name" required class="w-full px-4 py-2 bg-base-100 border border-white/20 rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors" placeholder="John Doe">
+                </div>
+                <div class="mb-5">
+                    <label for="email" class="block text-sm font-medium mb-2 text-text-dark">Email Address</label>
+                    <input type="email" id="email" name="email" required class="w-full px-4 py-2 bg-base-100 border border-white/20 rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors" placeholder="you@example.com">
+                </div>
+                <div class="mb-6">
+                    <label for="message" class="block text-sm font-medium mb-2 text-text-dark">Your Message</label>
+                    <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 bg-base-100 border border-white/20 rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors" placeholder="Tell me about your project..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-primary text-base-100 font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-primary-glow">
+                    Send Message
+                </button>
+            </form>
+            <div id="form-message" class="relative z-10 mt-4 text-center text-sm transition-opacity duration-300 opacity-0"></div>
+        </div>
+    </div>
+</section>
+    </main>
+    
+    <!-- =========== WhatsApp Floating Button =========== -->
+    <a href="https://wa.me/+919084210987" target="_blank" rel="noopener noreferrer" title="Contact me on WhatsApp" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 bg-primary p-4 rounded-full shadow-lg hover:shadow-primary-glow transform hover:scale-110 transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-base-100" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.52,3.48A11.9,11.9,0,0,0,12,0,12,12,0,0,0,1.48,18.06L0,24l6.1-1.62A11.86,11.86,0,0,0,12,24h0a12,12,0,0,0,12-12,11.9,11.9,0,0,0-3.48-8.52ZM12,21.82a9.83,9.83,0,0,1-5-1.45L6.44,20l-3.6,1,1-3.52.33-.56a9.89,9.89,0,0,1-1.6-5.43A9.89,9.89,0,0,1,12,2.11a10,10,0,0,1,7.07,17.07A9.89,9.89,0,0,1,12,21.82ZM17.44,14.4c-.22-.11-1.28-.63-1.48-.7s-.34-.11-.48.11-.56.7-.68.85-.25.17-.46.06a5.92,5.92,0,0,1-1.73-1.07,6.58,6.58,0,0,1-1.2-1.48.42.42,0,0,1,0-.41.87.87,0,0,1,.31-.42l-.16-.38c0-.11-.48-1.15-.66-1.57s-.35-.36-.48-.36h-.4a.86.86,0,0,0-.61.28.94.94,0,0,0-.66,1.6,2.2,2.2,0,0,0,.15,1,4.5,4.5,0,0,0,1.13,1.83,10,10,0,0,0,4.51,2.8,2.08,2.08,0,0,0,1.39.09,1.5,1.5,0,0,0,1-.58,1.2,1.2,0,0,0,.08-.58c-.01-.22-.09-.33-.21-.44Z"/>
+        </svg>
+    </a>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-surface pt-16 pb-8 border-t border-white/10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-10 text-center md:text-left">
+                
+                <!-- Column 1: Brand Info -->
+                <div class="lg:col-span-1">
+                  <a href="#" class="text-text-light flex items-center hover:text-secondary transition">
+  <i class="fa-solid fa-house text-lg"></i>
+</a>
+
+
+                    <p class="text-gray-400 mt-4 text-sm">
+                        Crafting high-performance digital experiences for modern businesses.
+                    </p>
+                </div>
+                
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h4 class="font-bold text-text-dark mb-4 uppercase tracking-wider text-sm">Links</h4>
+                    <nav class="flex flex-col space-y-3">
+                        <a href="#about" class="text-gray-400 hover:text-primary transition-colors">About</a>
+                        <a href="#services" class="text-gray-400 hover:text-primary transition-colors">Services</a>
+                        <a href="#portfolio" class="text-gray-400 hover:text-primary transition-colors">Work</a>
+                        <a href="#pricing" class="text-gray-400 hover:text-primary transition-colors">Pricing</a>
+                    </nav>
+                </div>
+
+                <!-- Column 3: Contact -->
+                <div>
+                    <h4 class="font-bold text-text-dark mb-4 uppercase tracking-wider text-sm">Contact</h4>
+                    <div class="text-gray-400 space-y-3">
+                        <p>Kochi, Kerala</p>
+                        <a href="mailto:contact@yourbrand.com" class="hover:text-primary transition-colors block">contact@yourbrand.com</a>
+                    </div>
+                </div>
+
+                <!-- Column 4: Social -->
+                <div>
+                    <h4 class="font-bold text-text-dark mb-4 uppercase tracking-wider text-sm">Follow Me</h4>
+                    <div class="flex justify-center md:justify-start space-x-5">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors" aria-label="LinkedIn Profile"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors" aria-label="GitHub Profile"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors" aria-label="Twitter Profile"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="mt-12 border-t border-white/10 pt-8 text-center">
+                <p class="text-gray-500 text-sm">© 2024 Thareek | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========== Main JavaScript Logic =========== -->
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const handleMobileMenu = () => {
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            if (!menuButton || !mobileMenu) return;
+            menuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            menuLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+        };
+
+        const populatePricingFeatures = () => {
+            const featuresList = document.getElementById('growth-features');
+            if (!featuresList) return;
+            const features = ["Custom 6-12 Page Website", "1 Year Free Hosting (GitHub Pages)", "Mobile-First Design", "Basic SEO Setup", "Contact Form Integration", "2 Rounds of Revisions"];
+            featuresList.innerHTML = features.map(feature => `<li class="flex items-center"><svg class="h-5 w-5 text-primary mr-3 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span>${feature}</span></li>`).join('');
+        };
+
+        const handleScrollAnimations = () => {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            if (animatedElements.length === 0) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            animatedElements.forEach(el => observer.observe(el));
+        };
+
+        const handleContactForm = () => {
+            const form = document.getElementById('contact-form');
+            const messageEl = document.getElementById('form-message');
+            if (!form || !messageEl) return;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!form.checkValidity()) {
+                    messageEl.textContent = 'Please fill out all required fields correctly.';
+                    messageEl.className = 'mt-4 text-center text-sm text-red-500 opacity-100';
+                    return;
+                }
+                messageEl.textContent = 'Thank you! I will get back to you soon.';
+                messageEl.className = 'mt-4 text-center text-sm text-primary opacity-100';
+                form.reset();
+                setTimeout(() => messageEl.style.opacity = '0', 5000);
+            });
+        };
+
+        const setupParticleCanvas = (canvasId, options = {}) => {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const section = canvas.parentElement;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: null, y: null, radius: 150 };
+
+            const defaults = {
+                particleColor: 'rgba(0, 242, 234, 0.7)',
+                lineColor: 'rgba(0, 242, 234, 0.15)',
+                densityFactor: 40,
+                interactive: false
+            };
+            const config = { ...defaults, ...options };
+
+            if (config.interactive) {
+                section.addEventListener('mousemove', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = e.clientX - rect.left;
+                    mouse.y = e.clientY - rect.top;
+                });
+                section.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+            }
+            
+            const resizeCanvas = () => {
+                canvas.width = section.offsetWidth;
+                canvas.height = section.offsetHeight;
+            };
+
+            const createParticles = () => {
+                particles = [];
+                const particleCount = Math.floor((canvas.width * canvas.height) / (config.densityFactor * 100));
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 2 + 1,
+                        baseX: Math.random() * canvas.width,
+                        baseY: Math.random() * canvas.height,
+                        density: (Math.random() * 30) + 1,
+                        speedX: (Math.random() - 0.5) * 0.3,
+                        speedY: (Math.random() - 0.5) * 0.3
+                    });
+                }
+            };
+            
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = config.particleColor;
+                    ctx.fill();
+                });
+
+                if(config.interactive){
+                    ctx.strokeStyle = config.lineColor;
+                    ctx.lineWidth = 0.5;
+                    for(let a = 0; a < particles.length; a++){
+                        for(let b = a; b < particles.length; b++){
+                            let dx = particles[a].x - particles[b].x;
+                            let dy = particles[a].y - particles[b].y;
+                            let distance = Math.sqrt(dx * dx + dy * dy);
+                            if(distance < 100){
+                                ctx.beginPath();
+                                ctx.moveTo(particles[a].x, particles[a].y);
+                                ctx.lineTo(particles[b].x, particles[b].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            };
+            
+            resizeCanvas();
+            createParticles();
+            animate();
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    resizeCanvas();
+                    createParticles();
+                }, 250);
+            });
+        };
+        
+        handleMobileMenu();
+        populatePricingFeatures();
+        handleScrollAnimations();
+        handleContactForm();
+        
+        // This line is now changed back to the original hero settings
+        setupParticleCanvas('particle-canvas-contact', { interactive: true });
+
+    });
+</script>
+</body>
+</html>
+
+
+
+
+

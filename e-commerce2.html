@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusFlow - Modern E-commerce</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins for headings, Open Sans for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Embedded CSS -->
+    <style>
+        /* CSS Variables for Consistent Theming */
+        :root {
+            --primary-color: #0891b2; /* Teal */
+            --secondary-color: #0e7490; /* Darker Teal */
+            --accent-color: #f59e0b;  /* Amber */
+            --dark-color: #111827;     /* Gray 900 */
+            --light-color: #f9fafb;    /* Gray 50 */
+        }
+        
+        /* Base Typography and Body Styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-color);
+            color: #374151; /* Gray 700 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+        }
+
+        /* Custom Tailwind CSS extensions */
+        .btn {
+            @apply font-semibold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform;
+        }
+        .btn-primary {
+            @apply btn bg-primary-color text-white shadow-md hover:bg-secondary-color hover:shadow-lg hover:-translate-y-0.5;
+        }
+        .btn-secondary {
+            @apply btn bg-transparent text-primary-color border-2 border-primary-color hover:bg-primary-color hover:text-white;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes flyToCart {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.2) translate(var(--end-x), var(--end-y)); }
+        }
+        
+        .fly-to-cart-element {
+            position: fixed;
+            z-index: 1000;
+            animation: flyToCart 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            pointer-events: none;
+        }
+        
+        /* Scroll-triggered animation setup */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+
+        /* Cart & Modal Transitions */
+        .drawer, .modal-container {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .drawer > div, .modal-container > div {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- 1. Header: Sticky with animated cart icon -->
+    <header id="header" class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-primary-color">NexusFlow</a>
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary-color transition-colors">Home</a>
+                    <a href="#featured" class="text-gray-600 hover:text-primary-color transition-colors">Products</a>
+                    <a href="#categories" class="text-gray-600 hover:text-primary-color transition-colors">Categories</a>
+                    <a href="#offers" class="text-gray-600 hover:text-primary-color transition-colors">Offers</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-primary-color transition-colors"><i class="fas fa-search"></i></button>
+                    <button id="wishlist-btn" class="text-gray-600 hover:text-primary-color transition-colors relative">
+                        <i class="fas fa-heart"></i>
+                        <span id="wishlist-count" class="absolute -top-2 -right-2 bg-accent-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center opacity-0 scale-0 transition-all">0</span>
+                    </button>
+                    <button id="cart-btn" class="text-gray-600 hover:text-primary-color transition-colors relative">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-accent-color text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center opacity-0 scale-0 transition-all">0</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-600"><i class="fas fa-bars fa-lg"></i></button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute top-full left-0 w-full max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+            <nav class="flex flex-col p-4 space-y-2">
+                <a href="#home" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Home</a>
+                <a href="#featured" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Products</a>
+                <a href="#categories" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Categories</a>
+                <a href="#offers" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Offers</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero Section: Promotional banner -->
+        <section id="home" class="pt-32 pb-16 bg-gradient-to-br from-cyan-50 to-blue-100">
+            <div class="container mx-auto px-4 grid md:grid-cols-2 items-center gap-8">
+                <div class="text-center md:text-left" style="animation: fadeIn 0.8s ease-out forwards;">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">Discover Your Next Favorite Style</h1>
+                    <p class="text-lg text-gray-600 mb-8">Shop our curated collection of high-quality apparel, accessories, and more. Unbeatable style, delivered to your door.</p>
+                    <a href="#featured" class="btn-primary">Shop Collection</a>
+                </div>
+                <div class="relative" style="animation: fadeIn 0.8s ease-out 0.2s forwards; opacity:0;">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1470" alt="Fashion collection" class="rounded-lg shadow-2xl w-full">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Featured Products: Grid with hover effects -->
+        <section id="featured" class="py-20">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12 reveal">
+                    <h2 class="text-3xl font-bold mb-2">Featured Products</h2>
+                    <p class="text-gray-600">Hand-picked just for you</p>
+                </div>
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Product cards will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Product Categories -->
+        <section id="categories" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12 reveal">
+                    <h2 class="text-3xl font-bold mb-2">Shop by Category</h2>
+                    <p class="text-gray-600">Find what you're looking for, faster.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Category Cards -->
+                    <a href="#" class="group relative h-64 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:-translate-y-2 reveal">
+                        <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=880" alt="Footwear" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <h3 class="text-2xl font-bold text-white">Footwear</h3>
+                        </div>
+                    </a>
+                     <a href="#" class="group relative h-64 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:-translate-y-2 reveal" style="transition-delay: 100ms;">
+                        <img src="https://images.unsplash.com/photo-1578932750294-f5075e85f4b5?auto=format&fit=crop&q=80&w=870" alt="Accessories" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <h3 class="text-2xl font-bold text-white">Accessories</h3>
+                        </div>
+                    </a>
+                     <a href="#" class="group relative h-64 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:-translate-y-2 reveal" style="transition-delay: 200ms;">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1372" alt="Apparel" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <h3 class="text-2xl font-bold text-white">Apparel</h3>
+                        </div>
+                    </a>
+                     <a href="#" class="group relative h-64 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:-translate-y-2 reveal" style="transition-delay: 300ms;">
+                        <img src="https://images.unsplash.com/photo-1511556820780-d912e42b4980?auto=format&fit=crop&q=80&w=987" alt="New Arrivals" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <h3 class="text-2xl font-bold text-white">New Arrivals</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Special Offers: Carousel -->
+        <section id="offers" class="py-20 bg-primary-color text-white">
+            <div class="container mx-auto px-4 reveal">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold mb-2 text-white">Limited Time Offer</h2>
+                    <p class="opacity-80">Save big on our best-selling watch!</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg shadow-xl max-w-4xl mx-auto p-8 grid md:grid-cols-2 items-center gap-8">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1399" alt="Special Offer Watch" class="rounded-lg shadow-lg w-full transform transition-transform duration-500 hover:scale-105">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">The Chronos Master</h3>
+                        <p class="text-4xl font-bold mb-4 text-accent-color">30% OFF</p>
+                        <p class="mb-6 opacity-90">Experience timeless elegance and precision. Crafted from stainless steel with a sapphire crystal face. Limited stock available.</p>
+                        <a href="#" class="btn bg-accent-color text-white shadow-md hover:bg-amber-500 hover:shadow-lg">Claim Offer</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Testimonials -->
+        <section id="testimonials" class="py-20">
+            <div class="container mx-auto px-4">
+                 <div class="text-center mb-12 reveal">
+                    <h2 class="text-3xl font-bold mb-2">What Our Customers Say</h2>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-md reveal">
+                        <div class="text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 mb-4">"Absolutely love my new shoes! The quality is amazing and they arrived faster than I expected. Will definitely shop here again."</p>
+                        <p class="font-semibold">- Sarah J.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-lg shadow-md reveal" style="transition-delay: 100ms;">
+                        <div class="text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 mb-4">"The customer service was fantastic. They helped me with a size exchange and were so friendly and efficient. Highly recommend!"</p>
+                        <p class="font-semibold">- Michael B.</p>
+                    </div>
+                     <div class="bg-white p-8 rounded-lg shadow-md reveal" style="transition-delay: 200ms;">
+                        <div class="text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                        <p class="text-gray-600 mb-4">"Great selection of products. I found the perfect gift for my husband. The quick view feature is a lifesaver."</p>
+                        <p class="font-semibold">- Emily R.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 10. Footer -->
+    <footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">NexusFlow</h3>
+                    <p class="text-gray-400">Your destination for curated style and quality products.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Shop</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#categories" class="text-gray-400 hover:text-white transition">Categories</a></li>
+                        <li><a href="#featured" class="text-gray-400 hover:text-white transition">New Arrivals</a></li>
+                        <li><a href="#offers" class="text-gray-400 hover:text-white transition">Special Offers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Support</h3>
+                     <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Shipping & Returns</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Stay Connected</h3>
+                    <p class="text-gray-400 mb-4">Sign up for our newsletter to get the latest deals.</p>
+                    <form id="newsletter-form" class="flex">
+                        <input type="email" placeholder="Your email" class="w-full px-4 py-2 rounded-l-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary-color" required>
+                        <button type="submit" class="bg-primary-color text-white px-4 rounded-r-md hover:bg-secondary-color transition">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-center text-gray-500">
+                <p>&copy; <span id="copyright-year"></span> NexusFlow. All Rights Reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <i class="fab fa-cc-visa fa-2x"></i>
+                    <i class="fab fa-cc-mastercard fa-2x"></i>
+                    <i class="fab fa-cc-paypal fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 7. Shopping Cart: Slide-in Panel -->
+    <div id="cart-drawer" class="drawer fixed inset-0 z-[60] invisible opacity-0">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/50"></div>
+        <!-- Panel -->
+        <div class="absolute top-0 right-0 h-full w-full max-w-md bg-white shadow-xl transform translate-x-full">
+            <div class="flex flex-col h-full">
+                <div class="p-6 flex justify-between items-center border-b">
+                    <h3 class="text-xl font-semibold">Shopping Cart</h3>
+                    <button id="cart-close-btn" class="text-gray-500 hover:text-gray-800">&times;</button>
+                </div>
+                <div id="cart-items" class="flex-grow p-6 overflow-y-auto">
+                    <!-- Cart items injected here -->
+                </div>
+                <div id="cart-footer" class="p-6 border-t bg-gray-50">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-lg font-semibold">Subtotal</span>
+                        <span id="cart-subtotal" class="text-lg font-semibold">$0.00</span>
+                    </div>
+                    <button id="checkout-btn" class="w-full btn-primary text-center">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Product Showcase: Quick View Modal -->
+    <div id="quick-view-modal" class="modal-container fixed inset-0 z-[60] invisible opacity-0 flex items-center justify-center p-4">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/50"></div>
+        <!-- Modal -->
+        <div class="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-lg shadow-xl transform scale-95">
+            <div id="quick-view-content" class="p-8 overflow-y-auto max-h-[90vh]">
+                <!-- Quick view content injected here -->
+            </div>
+            <button id="quick-view-close-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">&times;</button>
+        </div>
+    </div>
+    
+    <!-- Scroll to Top Button -->
+    <button id="scroll-top-btn" class="fixed bottom-6 right-6 w-12 h-12 bg-primary-color text-white rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition-all z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed top-24 right-4 z-[70] w-80 space-y-2"></div>
+    
+<!-- Embedded JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- DATA ---
+    // In a real application, this would come from an API
+    const products = [
+        { id: 1, name: "Classic Leather Watch", price: 189.99, originalPrice: 250.00, image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&q=80&w=988", rating: 4.8, reviews: 128 },
+        { id: 2, name: "Modern Wireless Headphones", price: 99.99, originalPrice: 149.99, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1470", rating: 4.9, reviews: 256 },
+        { id: 3, name: "Stylish Suede Sneakers", price: 79.50, originalPrice: 110.00, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ab?auto=format&fit=crop&q=80&w=1470", rating: 4.7, reviews: 312 },
+        { id: 4, name: "Minimalist Leather Backpack", price: 125.00, originalPrice: 180.00, image: "https://images.unsplash.com/photo-1553062407-98eeb68c6a62?auto=format&fit=crop&q=80&w=987", rating: 4.9, reviews: 178 },
+    ];
+
+    // --- STATE MANAGEMENT ---
+    let state = {
+        cart: JSON.parse(localStorage.getItem('nexusflow_cart')) || [],
+        wishlist: JSON.parse(localStorage.getItem('nexusflow_wishlist')) || [],
+    };
+    const saveState = () => {
+        localStorage.setItem('nexusflow_cart', JSON.stringify(state.cart));
+        localStorage.setItem('nexusflow_wishlist', JSON.stringify(state.wishlist));
+    };
+
+    // --- DOM ELEMENT SELECTORS ---
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
+    const elements = {
+        productsGrid: $('#products-grid'),
+        cartBtn: $('#cart-btn'),
+        cartCount: $('#cart-count'),
+        cartDrawer: $('#cart-drawer'),
+        cartCloseBtn: $('#cart-close-btn'),
+        cartItems: $('#cart-items'),
+        cartSubtotal: $('#cart-subtotal'),
+        cartFooter: $('#cart-footer'),
+        quickViewModal: $('#quick-view-modal'),
+        quickViewContent: $('#quick-view-content'),
+        quickViewCloseBtn: $('#quick-view-close-btn'),
+        scrollTopBtn: $('#scroll-top-btn'),
+        toastContainer: $('#toast-container'),
+        mobileMenuBtn: $('#mobile-menu-btn'),
+        mobileMenu: $('#mobile-menu'),
+    };
+
+    // --- HELPER FUNCTIONS ---
+    const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+
+    const showToast = (message, type = 'success') => {
+        const colors = { success: 'bg-green-500', error: 'bg-red-500' };
+        const toast = document.createElement('div');
+        toast.className = `p-4 rounded-lg shadow-lg text-white ${colors[type]} transform translate-x-full opacity-0 transition-all duration-300`;
+        toast.textContent = message;
+        elements.toastContainer.prepend(toast);
+        setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
+        setTimeout(() => {
+            toast.classList.add('translate-x-full', 'opacity-0');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 3000);
+    };
+    
+    const toggleModal = (modal, show) => {
+        if (show) {
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.querySelector('div > div').classList.remove('scale-95');
+        } else {
+            modal.querySelector('div > div').classList.add('scale-95');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('invisible'), 300);
+        }
+    };
+    
+    // --- RENDER FUNCTIONS ---
+    const renderProducts = () => {
+        elements.productsGrid.innerHTML = products.map(p => `
+            <div class="group bg-white rounded-lg shadow-md overflow-hidden reveal">
+                <div class="relative">
+                    <img src="${p.image}" alt="${p.name}" class="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="quick-view-btn w-12 h-12 bg-white text-dark-color rounded-full hover:bg-gray-200" data-id="${p.id}"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="p-4 text-center">
+                    <h3 class="font-semibold text-lg truncate">${p.name}</h3>
+                    <div class="flex justify-center items-center space-x-2 mt-2">
+                        <p class="text-primary-color font-bold text-xl">${formatCurrency(p.price)}</p>
+                        ${p.originalPrice ? `<p class="text-gray-400 line-through">${formatCurrency(p.originalPrice)}</p>` : ''}
+                    </div>
+                    <button class="add-to-cart-btn w-full mt-4 btn-secondary" data-id="${p.id}">Add to Cart</button>
+                </div>
+            </div>`).join('');
+    };
+    
+    const updateCartUI = () => {
+        // Update cart count bubble
+        const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+        elements.cartCount.textContent = totalItems;
+        if (totalItems > 0) {
+            elements.cartCount.classList.remove('opacity-0', 'scale-0');
+        } else {
+            elements.cartCount.classList.add('opacity-0', 'scale-0');
+        }
+        
+        // Update cart drawer content
+        if (state.cart.length === 0) {
+            elements.cartItems.innerHTML = `<p class="text-gray-500 text-center mt-8">Your cart is empty.</p>`;
+            elements.cartFooter.classList.add('hidden');
+        } else {
+            elements.cartItems.innerHTML = state.cart.map(item => `
+                <div class="flex items-center justify-between py-4 border-b">
+                    <div class="flex items-center gap-4">
+                        <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md">
+                        <div>
+                            <h4 class="font-semibold">${item.name}</h4>
+                            <p class="text-gray-500">${formatCurrency(item.price)}</p>
+                            <div class="flex items-center border rounded mt-2">
+                                <button class="quantity-change-btn px-2" data-id="${item.id}" data-change="-1">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-change-btn px-2" data-id="${item.id}" data-change="1">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="remove-from-cart-btn text-gray-400 hover:text-red-500" data-id="${item.id}">&times;</button>
+                </div>`).join('');
+            elements.cartFooter.classList.remove('hidden');
+        }
+        
+        // Update subtotal
+        const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        elements.cartSubtotal.textContent = formatCurrency(subtotal);
+    };
+
+    const renderQuickView = (product) => {
+        elements.quickViewContent.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-8">
+                <img src="${product.image}" alt="${product.name}" class="w-full h-auto max-h-[75vh] object-contain rounded-lg">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">${product.name}</h2>
+                    <div class="flex items-center mb-4">
+                        <div class="text-amber-400">${Array(5).fill(0).map((_, i) => `<i class="${i < Math.floor(product.rating) ? 'fas' : 'far'} fa-star"></i>`).join('')}</div>
+                        <span class="text-gray-500 ml-2 text-sm">${product.reviews} reviews</span>
+                    </div>
+                    <p class="text-3xl font-bold text-primary-color mb-4">${formatCurrency(product.price)}</p>
+                    <p class="text-gray-600 mb-6">This is a placeholder description. In a real store, you'd find detailed information about the product's features, materials, and benefits.</p>
+                    <div class="flex items-center gap-4">
+                         <div class="flex items-center border rounded-lg">
+                            <button id="qv-quantity-down" class="px-4 py-2">-</button>
+                            <span id="qv-quantity" class="px-4 py-2">1</span>
+                            <button id="qv-quantity-up" class="px-4 py-2">+</button>
+                        </div>
+                        <button class="add-to-cart-btn-qv btn-primary flex-1" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                </div>
+            </div>`;
+    };
+
+    // --- E-COMMERCE ACTIONS ---
+    const addToCart = (productId, quantity, triggerElement) => {
+        const existingItem = state.cart.find(item => item.id === productId);
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            const product = products.find(p => p.id === productId);
+            state.cart.push({ ...product, quantity });
+        }
+        
+        // Fly-to-cart animation
+        if(triggerElement) {
+            const productImg = triggerElement.closest('.group').querySelector('img');
+            const rect = productImg.getBoundingClientRect();
+            const cartRect = elements.cartBtn.getBoundingClientRect();
+            const flyer = document.createElement('img');
+            flyer.src = productImg.src;
+            flyer.className = 'fly-to-cart-element rounded-md';
+            flyer.style.left = `${rect.left}px`;
+            flyer.style.top = `${rect.top}px`;
+            flyer.style.width = `${rect.width}px`;
+            flyer.style.height = `${rect.height}px`;
+            flyer.style.setProperty('--end-x', `${cartRect.left - rect.left}px`);
+            flyer.style.setProperty('--end-y', `${cartRect.top - rect.top}px`);
+            document.body.appendChild(flyer);
+            flyer.addEventListener('animationend', () => flyer.remove());
+        }
+
+        showToast('Item added to cart!');
+        updateAndSave();
+    };
+    
+    const removeFromCart = (productId) => {
+        state.cart = state.cart.filter(item => item.id !== productId);
+        updateAndSave();
+    };
+
+    const changeQuantity = (productId, change) => {
+        const item = state.cart.find(i => i.id === productId);
+        if (item) {
+            item.quantity += change;
+            if (item.quantity <= 0) removeFromCart(productId);
+            else updateAndSave();
+        }
+    };
+    
+    // --- EVENT HANDLERS ---
+    const handleDocumentClick = (e) => {
+        const target = e.target;
+        
+        // Product grid actions
+        if(target.closest('.add-to-cart-btn')) {
+            const id = parseInt(target.closest('.add-to-cart-btn').dataset.id);
+            addToCart(id, 1, target);
+        }
+        if(target.closest('.quick-view-btn')) {
+            const id = parseInt(target.closest('.quick-view-btn').dataset.id);
+            const product = products.find(p => p.id === id);
+            renderQuickView(product);
+            toggleModal(elements.quickViewModal, true);
+        }
+        
+        // Cart drawer actions
+        if(target.closest('.remove-from-cart-btn')) {
+            const id = parseInt(target.closest('.remove-from-cart-btn').dataset.id);
+            removeFromCart(id);
+        }
+        if(target.closest('.quantity-change-btn')) {
+            const id = parseInt(target.closest('.quantity-change-btn').dataset.id);
+            const change = parseInt(target.closest('.quantity-change-btn').dataset.change);
+            changeQuantity(id, change);
+        }
+
+        // Quick view modal actions
+        if (elements.quickViewModal.contains(target)) {
+            let quantityEl = $('#qv-quantity');
+            if (!quantityEl) return;
+            let quantity = parseInt(quantityEl.textContent);
+
+            if (target.matches('#qv-quantity-up')) quantityEl.textContent = quantity + 1;
+            if (target.matches('#qv-quantity-down') && quantity > 1) quantityEl.textContent = quantity - 1;
+            if (target.matches('.add-to-cart-btn-qv')) {
+                const id = parseInt(target.dataset.id);
+                addToCart(id, parseInt(quantityEl.textContent));
+                toggleModal(elements.quickViewModal, false);
+            }
+        }
+    };
+
+    // --- INITIALIZATION ---
+    const init = () => {
+        renderProducts();
+        updateCartUI();
+        
+        // Global click listener
+        document.addEventListener('click', handleDocumentClick);
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            $('#header').classList.toggle('py-2', window.scrollY > 50);
+            $('#header').classList.toggle('py-4', window.scrollY <= 50);
+        });
+
+        // Scroll-to-top button
+        window.addEventListener('scroll', () => {
+            elements.scrollTopBtn.classList.toggle('opacity-0', window.scrollY < 300);
+            elements.scrollTopBtn.classList.toggle('invisible', window.scrollY < 300);
+        });
+        elements.scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Mobile menu toggle
+        elements.mobileMenuBtn.addEventListener('click', () => elements.mobileMenu.classList.toggle('max-h-0'));
+
+        // Modals & Drawers
+        elements.cartBtn.addEventListener('click', () => {
+            elements.cartDrawer.classList.remove('invisible', 'opacity-0');
+            elements.cartDrawer.querySelector('div > div').classList.remove('translate-x-full');
+        });
+        elements.cartCloseBtn.addEventListener('click', () => {
+            elements.cartDrawer.querySelector('div > div').classList.add('translate-x-full');
+            elements.cartDrawer.classList.add('opacity-0');
+            setTimeout(() => elements.cartDrawer.classList.add('invisible'), 300);
+        });
+        elements.quickViewCloseBtn.addEventListener('click', () => toggleModal(elements.quickViewModal, false));
+        
+        // Copyright Year
+        $('#copyright-year').textContent = new Date().getFullYear();
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        $$('.reveal').forEach(el => observer.observe(el));
+    };
+
+    const updateAndSave = () => {
+        saveState();
+        updateCartUI();
+    };
+
+    // Run the application
+    init();
+});
+</script>
+
+</body>
+</html>
